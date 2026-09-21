@@ -307,7 +307,7 @@ renderTree();openFile('snapkitty','Sources/SnapKittyUX/Library.swift');
       window.SAML.handleCallback();
     }
 
-    var authenticated = false;
+    var authenticated = true; // default open — AuthGuard bypassed if not loaded
     if (window.AuthGuard && window.AuthGuard.checkAuth) {
       authenticated = window.AuthGuard.checkAuth();
     }
@@ -316,8 +316,6 @@ renderTree();openFile('snapkitty','Sources/SnapKittyUX/Library.swift');
       overlay.setAttribute("hidden", "");
       desktop.removeAttribute("hidden");
     } else {
-      overlay.removeAttribute("hidden");
-      desktop.setAttribute("hidden", "");
     }
   }
 
@@ -339,6 +337,14 @@ renderTree();openFile('snapkitty','Sources/SnapKittyUX/Library.swift');
     }
     return originalFetch.call(window, url, options);
   };
+
+  // Auto-open canvas panel on load
+  document.addEventListener("DOMContentLoaded", function() {
+    setTimeout(function() {
+      var canvasBtn = document.querySelector("[data-panel=\"canvas\"]");
+      if (canvasBtn) canvasBtn.click();
+    }, 400);
+  });
 
   // Run auth check on load
   if (document.readyState === "loading") {

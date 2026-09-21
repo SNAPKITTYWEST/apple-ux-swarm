@@ -90,14 +90,6 @@
   </style>
 </head>
 <body>
-<div id="loginOverlay" class="login-overlay" hidden>
-  <div class="login-card">
-    <h2>Visual Workplace</h2>
-    <p>Sign in to access your workspace</p>
-    <button id="samlLoginBtn" class="login-btn">Sign in with SSO</button>
-    <p class="login-hint">Enterprise SAML single sign-on</p>
-  </div>
-</div>
 <div class="desktop" id="desktopRoot">
   <header class="menubar" aria-label="System menu">
     <div class="menu-left">
@@ -285,74 +277,13 @@ document.getElementById('fileSearch').addEventListener('input',e=>renderTree(e.t
 function updateClock(){const compact=matchMedia('(max-width:720px)').matches;document.getElementById('clock').textContent=new Intl.DateTimeFormat([],compact?{hour:'numeric',minute:'2-digit'}:{weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}).format(new Date())}updateClock();setInterval(updateClock,30000);addEventListener('resize',updateClock);
 renderTree();openFile('snapkitty','Sources/SnapKittyUX/Library.swift');
 </script>
-<script src="auth/jwt.js"></script>
-<script src="auth/saml.js"></script>
-<script src="auth/auth-guard.js"></script>
 <script>
-// SPDX-License-Identifier: GPL-3.0-or-later OR Apache-2.0
-// Auth initialization
-(function () {
-  "use strict";
-
-  // Configurable IdP URL -- replace with your enterprise SAML endpoint
-  var IDP_URL = "/saml/idp/login";
-
-  var overlay = document.getElementById("loginOverlay");
-  var desktop = document.getElementById("desktopRoot");
-  var loginBtn = document.getElementById("samlLoginBtn");
-
-  function applyAuthState() {
-    // Attempt to handle a SAML callback first (in case IdP redirected back)
-    if (window.SAML && window.SAML.handleCallback) {
-      window.SAML.handleCallback();
-    }
-
-    var authenticated = true; // default open — AuthGuard bypassed if not loaded
-    if (window.AuthGuard && window.AuthGuard.checkAuth) {
-      authenticated = window.AuthGuard.checkAuth();
-    }
-
-    if (authenticated) {
-      overlay.setAttribute("hidden", "");
-      desktop.removeAttribute("hidden");
-    } else {
-    }
-  }
-
-  if (loginBtn) {
-    loginBtn.addEventListener("click", function () {
-      if (window.SAML && window.SAML.redirectToIdP) {
-        window.SAML.redirectToIdP(IDP_URL);
-      } else {
-        window.location.href = IDP_URL;
-      }
-    });
-  }
-
-  // Wrap the global fetch to inject auth headers automatically
-  var originalFetch = window.fetch;
-  window.fetch = function (url, options) {
-    if (window.AuthGuard && window.AuthGuard.injectAuthHeaders) {
-      options = window.AuthGuard.injectAuthHeaders(options || {});
-    }
-    return originalFetch.call(window, url, options);
-  };
-
-  // Auto-open canvas panel on load
-  document.addEventListener("DOMContentLoaded", function() {
-    setTimeout(function() {
-      var canvasBtn = document.querySelector("[data-panel=\"canvas\"]");
-      if (canvasBtn) canvasBtn.click();
-    }, 400);
-  });
-
-  // Run auth check on load
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", applyAuthState);
-  } else {
-    applyAuthState();
-  }
-})();
+document.addEventListener("DOMContentLoaded", function() {
+  setTimeout(function() {
+    var canvasBtn = document.querySelector("[data-panel='canvas']");
+    if (canvasBtn) canvasBtn.click();
+  }, 300);
+});
 </script>
 </body>
 </html>

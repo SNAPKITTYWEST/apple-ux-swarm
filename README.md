@@ -14,7 +14,7 @@
 ```
 
 <p align="center">
-  <video src="https://github.com/SNAPKITTYWEST/apple-ux-swarm/raw/main/frontend/assets/clear.mp4"
+  <video src="https://github.com/SNAPKITTYWEST/apple-ux-swarm/releases/download/v1.0.0/clear.mp4"
          autoplay muted loop playsinline
          width="680"
          style="border-radius:16px">
